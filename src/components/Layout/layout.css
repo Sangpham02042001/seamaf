@@ -1,0 +1,4 @@
+.main-body {
+    min-height: calc(100vh - 130px);
+    /* background-color: red; */
+}

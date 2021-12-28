@@ -1,0 +1,40 @@
+.footer-above {
+    padding-top: 20px;
+    display: flex !important;
+}
+
+.footer-above > div {
+    flex: 1;
+    padding-right: 15px;
+}
+
+.footer-above h3 {
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.footer-above p {
+    color: #8f8f8f;
+}
+
+.footer-useful-list {
+    list-style-type: none;
+    color: #8f8f8f;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20px;
+    padding-left: 0;
+    row-gap: 10px;
+}
+
+.footer-contact > div {
+    display: flex;
+    text-align: center;
+}
+
+.footer-contact span {
+    color: red;
+    font-size: 18px;
+    margin-right: 20px;
+}
