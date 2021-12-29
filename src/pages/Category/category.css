@@ -1,0 +1,39 @@
+.category-header {
+    background-color: #f8f7f7;
+    padding: 20px 0 10px;
+}
+
+.category-header h4 {
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 0;
+}
+
+.category-header a {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.category-header a:hover {
+    color: var(--text-color);
+}
+
+.category-list {
+    list-style-type: circle;
+    padding-left: 0;
+}
+
+.category-list li {
+    border-bottom: 1px solid red;
+    padding: 10px 0;
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 25px;
+    column-gap: 15px;
+    max-width: 100%;
+    margin-left: 25px;
+}
