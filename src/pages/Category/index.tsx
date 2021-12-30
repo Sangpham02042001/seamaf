@@ -12,8 +12,8 @@ import './category.css'
 export default function CategoryPage() {
     const params: any = useParams()
     const {categoryId} = params
-    const productReducer = useSelector((state: RootState) => {
-        return state.product;
+    const productsReducer = useSelector((state: RootState) => {
+        return state.products;
     })
 	const categoryReducer = useSelector((state: RootState) => {
 		return state.category;
@@ -54,7 +54,7 @@ export default function CategoryPage() {
 								</Col>
 								<Col span={18}>
 									<div className='product-list'>
-										{productReducer.products.map((product, index) => (
+										{productsReducer.products.map((product, index) => (
 											<ProductItem  key={index} product={product}/>
 										))}
 									</div>

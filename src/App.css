@@ -1,6 +1,7 @@
 :root {
   --text-color: #000;
---black-bg: #282828;
+  --black-bg: #282828;
+  --red-color: #f51167
 }
 body {
   font-family: 'Josefin Sans', sans-serif;

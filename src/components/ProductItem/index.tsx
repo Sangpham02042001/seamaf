@@ -1,7 +1,10 @@
 import React, { FC } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
+import { changeCartQuantity, getCart } from '../../store/reducers/cart'
+import { RootState } from '../../store'
 import './product-item.css'
 
 interface ProductItemProps {
@@ -27,21 +30,28 @@ const formatter = new Intl.NumberFormat('en-US', {
 
 
 const ProductItem: FC<ProductItemProps> = ({product}): JSX.Element => {
-    let myCart = JSON.parse(localStorage.getItem('cart') || '{}') || {}
+    const dispatch = useDispatch()
+    const cartReducer = useSelector((state: RootState) => {
+        return state.cart
+      })
+    let myCart = {...cartReducer.cart}
     const handleAddToCart = (product: ProductType) => (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+        let id = '' + product.id
         event.preventDefault()
-        if (!myCart[product.id]) {
-					myCart = {
-							...myCart,
-						[product.id]: {
-							...product,
-							quality: 1
-						}
-					}
+        if (!(myCart as any)[id]) {
+            myCart = {
+                    ...myCart,
+                [id]: {
+                    ...product,
+                    quantity: 1
+                }
+            }
+            localStorage.setItem('cart', JSON.stringify(myCart))
+            dispatch(getCart())
         } else {
-					myCart[product.id].quality++
-				}
-				localStorage.setItem('cart', JSON.stringify(myCart))
+            let quantity = (myCart as any)[id].quantity
+            dispatch(changeCartQuantity({key: id, quantity: quantity + 1}))
+        }
     }
 
     return <Link to={`/product/${product.id}`}>

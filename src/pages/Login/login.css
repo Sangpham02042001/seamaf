@@ -1,0 +1,44 @@
+.login-page {
+    margin-top: 40px;
+    display: flex !important;
+    border: 2px solid #eee;
+    border-radius: 20px;
+}
+
+.login-page > div {
+    flex: 1;
+}
+
+.login-image {
+    background-image: url(https://seamaf.com/frontend/img/background.jpg);
+    width: 50%;
+    min-height: 400px;
+    height: 60vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.login-form-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form-container .login-button {
+    width: 100%;
+    background-color: var(--red-color);
+    color: #FFF;
+    font-size: 18px;
+    outline: none;
+    border: none;
+}
+
+.login-form-container .login-button:hover {
+    color: #FFF;
+    background-color: var(--red-color);
+}

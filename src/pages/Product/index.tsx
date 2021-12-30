@@ -7,6 +7,14 @@ import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { RootState } from '../../store'
 import Layout from '../../components/Layout'
 import ProductItem from '../../components/ProductItem'
+import { getCategories } from '../../store/reducers/categories'
+import {getProductsByCategoryId} from '../../store/reducers/products'
+import product, { getProduct } from '../../store/reducers/product'
+import { changeCartQuantity, getCart } from '../../store/reducers/cart'
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination"
+import "swiper/css/navigation"
 import './product.css'
 
 const formatter = new Intl.NumberFormat('en-US', {
@@ -21,20 +29,46 @@ export default function ProductPage() {
 	const [quantity, setQuantity] = useState<number>(1)
  	const params: any = useParams()
 	const {productId} = params
+	const dispatch = useDispatch()
+	const cartReducer = useSelector((state: RootState) => {
+    	return state.cart
+    })
+	let myCart = {...cartReducer.cart}
 
-	useEffect(() => {
-		setCurrentImage(0)
-		setQuantity(1)
-	}, [productId])
-
-	const productReducer = useSelector((state: RootState) => {
-			return state.product;
+	const productsReducer = useSelector((state: RootState) => {
+		return state.products;
 	})
 	const categoryReducer = useSelector((state: RootState) => {
 		return state.category;
 	})
-	const currentProduct: any = (productReducer.products.find(({id}) => id == productId) || {})
-	const currentCategory: any = !currentProduct.id ? 'Sample' : categoryReducer.categories.find(({id}) => id == currentProduct.category_id)
+	const productReducer = useSelector((state: RootState) => {
+		return state.product;
+	})
+
+	const currentCategory: any = !productReducer.product.id ? 'Sample' : categoryReducer.categories.find(({id}) => id == productReducer.product.category_id)
+
+
+	useEffect(() => {
+		if (!categoryReducer.loaded) {
+			dispatch(getCategories())
+		}
+		if(productReducer.product.category_id) {
+			dispatch(getProductsByCategoryId(Number(productReducer.product.category_id)))
+		}
+	}, [categoryReducer.loaded, productReducer.product.category_id])
+
+	// useEffect(() => {
+	// 	if (!productsReducer.loaded && categoryReducer.loaded && productReducer.loaded) {
+	// 		console.log('fdsafdsaf')
+	// 		dispatch(getProductsByCategoryId(Number(productReducer.product.category_id)))
+	// 	}
+	// }, [productId, categoryReducer.loaded, productReducer.loaded])
+
+	useEffect(() => {
+		setCurrentImage(0)
+		setQuantity(1)
+		dispatch(getProduct(Number(productId)))
+	}, [productId])
 
 	const handleChangeImage = (index: number) => (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
 		event.preventDefault()
@@ -55,14 +89,34 @@ export default function ProductPage() {
 		setQuantity(quantity - 1)
 	}
 
+	const handleAddToCart = (product: any) => (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+		event.preventDefault()
+		let id = '' + product.id
+		if (!myCart[product.id]) {
+            myCart = {
+                    ...myCart,
+                [product.id]: {
+                    ...product,
+                    quantity: quantity
+                }
+            }
+			localStorage.setItem('cart', JSON.stringify(myCart))
+            dispatch(getCart())
+        } else {
+            let _quantity = (myCart as any)[id].quantity
+            dispatch(changeCartQuantity({key: id, quantity: quantity + _quantity}))
+        }
+	}
+
 	return (
 		<Layout>
-				<>
+				<div>
+				{productReducer.product.id && <>
 					<Row className='category-header'>
 							<Col span={16} offset={4}>
 									<h4>{currentCategory.name || 'Sample'}</h4>
-									<Link to={`${currentCategory.id ?  '#' : '/category/' + currentCategory.id}`}>
-													Home / Shop /
+									<Link to={`${!currentCategory.id ?  '#' : '/category/' + currentCategory.id}`}>
+										Home / {currentCategory.name} / {productReducer.product.name}
 									</Link>
 							</Col>
 					</Row>
@@ -76,11 +130,11 @@ export default function ProductPage() {
 							<Row>
 								<Col span={12}>
 									<div style={{
-										backgroundImage: `url(${currentProduct.images[currentImage].path})`
+										backgroundImage: `url(${productReducer.product.images[currentImage].path})`
 									}} className='product-main-image'>
 									</div>
 									<div className='product-image-list'>
-										{currentProduct.images.map((image: any, index: number) => {
+										{productReducer.product.images.map((image: any, index: number) => {
 											return <div key={index} className={index === currentImage ? 'product-selected-image' : ''} 
 												style={{
 													backgroundImage: `url(${image.path})`
@@ -91,8 +145,8 @@ export default function ProductPage() {
 									</div>
 								</Col>
 								<Col span={11} offset={1}>
-									<h4>{currentProduct.name}</h4>
-									<span style={{fontSize:'20px', fontWeight: '600'}}>{formatter.format(currentProduct.price)}</span>
+									<h4>{productReducer.product.name}</h4>
+									<span style={{fontSize:'20px', fontWeight: '600'}}>{formatter.format(productReducer.product.price)}</span>
 									<div className='product-quantity-container'>
 										<h4>QUANTITY</h4>
 										<span>
@@ -105,11 +159,11 @@ export default function ProductPage() {
 											</span>
 										</span>
 									</div>
-									<Button type="primary" danger>Add to cart</Button>
+									<Button type="primary" danger onClick={handleAddToCart(productReducer.product)}>Add to cart</Button>
 									<br />
 									<Collapse defaultActiveKey={['1']} style={{marginTop: '20px'}} bordered={false}>
 										<Panel header="Description" key="1">
-											<p>{currentProduct.description}</p>
+											<p>{productReducer.product.description}</p>
 										</Panel>
 										<Panel header="Shipping & Returns" key="2">
 											<p>7 Days Returns</p>
@@ -123,13 +177,26 @@ export default function ProductPage() {
 					<Row>
 						<Col span={16} offset={4}>
 							<h2 style={{fontWeight: '600', textAlign: 'center'}}>RELATED PRODUCTS</h2>
-							<div className='related-products'>
-								{productReducer.products.filter(({id}) => id != currentProduct.id)
+							{/* <div className='related-products'>
+								{productsReducer.products.filter(({id}) => id != productReducer.product.id)
 									.map((product: any, index: number) => <ProductItem key={product.id} product={product} />)}
-							</div>
+							</div> */}
+							<Swiper slidesPerView={4} spaceBetween={30} slidesPerGroup={1} loop={true}
+								autoplay={{
+									"delay": 1000,
+									"disableOnInteraction": false
+								}} pagination={{
+									"clickable": true
+								}}>
+								{productsReducer.products.map((product, key) => (<SwiperSlide key={key}>
+									<ProductItem product={product} />
+								</SwiperSlide>))}
+							</Swiper>
+							<br />
 						</Col>
 					</Row>
-				</>
+				</>}
+				</div>
 		</Layout>
 	)
 }
