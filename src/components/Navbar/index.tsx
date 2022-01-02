@@ -3,13 +3,15 @@ import { useEffect, useState, useCallback } from 'react'
 import { Row, Col, Input, Select, Menu, 
   Dropdown, Spin, Tooltip, Badge } from "antd";
 import { SearchOutlined, HeartOutlined, ShoppingCartOutlined, 
-  LoadingOutlined, CloseOutlined } from "@ant-design/icons"
+  LoadingOutlined, CloseOutlined, UserOutlined, 
+  LogoutOutlined, ToolOutlined } from "@ant-design/icons"
 import { Link } from "react-router-dom";
 import _ from 'lodash';
 import { axiosInstance } from '../../utils';
 import "./navbar.css";
 import { RootState } from '../../store';
 import { getCategories } from '../../store/reducers/categories'
+import { getUserInfo, logout } from '../../store/reducers/user';
 import { getCart } from '../../store/reducers/cart';
 
 const {Option } = Select
@@ -26,10 +28,16 @@ export default function Navbar() {
   const cartReducer = useSelector((state: RootState) => {
     return state.cart
   });
+  const userReducer = useSelector((state: RootState) => {
+    return state.user
+  });
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getCart())
+    if (!userReducer.loaded) {
+      dispatch(getUserInfo())
+    }
   }, [])
 
   useEffect(() => {
@@ -49,6 +57,24 @@ export default function Navbar() {
       ))}
     </Menu>
   );
+
+  const handleLogout = () => {
+    dispatch(logout())
+    // window.location.reload()
+  }
+
+  const userMenu = (
+    <Menu style={{minWidth: '100px'}}>
+      {userReducer.user.role === 'admin' && <Menu.Item key="admin">
+        <Link to="/admin">
+         <ToolOutlined /> Manage
+        </Link>
+      </Menu.Item>}
+      <Menu.Item key="logout" onClick={handleLogout}>
+        <LogoutOutlined /> Logout
+      </Menu.Item>
+    </Menu>
+  )
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setText(event.target.value)
@@ -123,6 +149,12 @@ export default function Navbar() {
               Carts
             </Badge>
           </Link>
+          {userReducer.user.name && <Dropdown overlay={userMenu}>
+            <span>
+              <UserOutlined />
+              {userReducer.user.name}
+            </span>
+          </Dropdown>}
         </Col>
       </Row>
       <Row className="navbar-below">
@@ -137,8 +169,10 @@ export default function Navbar() {
           <Link to="/">Our services</Link>
           <Link to="/">Blog</Link>
           <Link to="/">Content</Link>
-          <Link to="/login">Sign in</Link>
-          <Link to="/signup">Sign up</Link>
+          {!userReducer.user.name && <>
+            <Link to="/login">Sign in</Link>
+            <Link to="/signup">Sign up</Link>
+          </>}
         </Col>
       </Row>
     </>

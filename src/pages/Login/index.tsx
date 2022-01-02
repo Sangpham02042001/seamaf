@@ -1,21 +1,37 @@
 import React, {useState} from 'react'
-import {Row, Col, Input, Button} from 'antd'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import {Row, Col, Input, message} from 'antd'
 import { MailOutlined, KeyOutlined } from '@ant-design/icons'
-import Layout from '../../components/Layout'
-import './login.css'
 import { Link } from 'react-router-dom'
+import { RootState } from '../../store'
+import { getUserInfo } from '../../store/reducers/user'
+import { axiosInstance } from '../../utils'
+import './login.css'
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const history = useHistory()
+    const dispatch = useDispatch()
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log(email, password)
+        let response = await axiosInstance.post('/login', {
+            username: email,
+            password
+        })
+        if (response.status == 401) {
+            message.warning('Email and Password not match')
+        } else {
+            localStorage.setItem('access_token', response.data.access_token)
+            message.success('Sign in success')
+            history.push('/')
+            dispatch(getUserInfo())
+        }
     }
 
     return (
-        <Layout>
             <Row>
                 <Col span={18} offset={3} className='login-page'>
                     <div className='login-image'>
@@ -45,6 +61,5 @@ export default function LoginPage() {
                     </div>
                 </Col>
             </Row>
-        </Layout>
     )
 }

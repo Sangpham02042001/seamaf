@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import Layout from '../../components/Layout'
 import {Row, Col, Input, message, Modal, Button} from 'antd'
 import { Link, useHistory } from 'react-router-dom'
 import { MailOutlined, KeyOutlined, UserOutlined } from '@ant-design/icons'
@@ -16,6 +15,9 @@ export default function SignupPage() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         console.log(name, email, password, confirmPassword)
+        if (password.length < 6) {
+            message.warning('Password must has at least 6 characters!')
+        }
         if (password !== confirmPassword) {
             message.warning('Confirm password not match')
             return
@@ -49,7 +51,6 @@ export default function SignupPage() {
     }
 
     return (
-        <Layout>
             <>
                 <Row>
                     <Col span={18} offset={3} className='login-page'>
@@ -59,25 +60,25 @@ export default function SignupPage() {
                             <h2>Create new account</h2>
                             <form style={{width: '100%'}} onSubmit={handleSubmit}>
                                 <Input size='large' prefix={<UserOutlined style={{color: 'var(--red-color)'}} />} 
-                                    placeholder='Your name' 
+                                    placeholder='Your name' required
                                     onChange={e => {
                                         e.preventDefault()
                                         setName(e.target.value)
                                     }} /> <br /> <br />
                                 <Input size='large' prefix={<MailOutlined style={{color: 'var(--red-color)'}} />} 
-                                    placeholder='Email Address' type='email'
+                                    placeholder='Email Address' type='email' required
                                     onChange={e => {
                                         e.preventDefault()
                                         setEmail(e.target.value)
                                     }} /> <br /> <br />
                                 <Input size='large' prefix={<KeyOutlined style={{color: 'var(--red-color)'}} />} 
-                                    placeholder='Password' type='password'
+                                    placeholder='Password' type='password' required
                                     onChange={e => {
                                         e.preventDefault()
                                         setPassword(e.target.value)
                                     }} /> <br /> <br />
                                 <Input size='large' prefix={<KeyOutlined style={{color: 'var(--red-color)'}} />} 
-                                    placeholder='Confirm Password' type='password'
+                                    placeholder='Confirm Password' type='password' required
                                     onChange={e => {
                                         e.preventDefault()
                                         setConfirmPassword(e.target.value)
@@ -108,6 +109,5 @@ export default function SignupPage() {
                     
                 </Modal>
             </>
-        </Layout>
     )
 }

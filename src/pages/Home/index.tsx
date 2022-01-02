@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react'
 import {Row, Col} from 'antd'
 import { axiosInstance } from "../../utils"
-import Layout from "../../components/Layout"
 import ProductItem from '../../components/ProductItem'
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -27,7 +26,6 @@ export default function Home() {
     }, [])
 
     return (
-        <Layout>
             <Row style={{marginTop: '30px'}}>
                 <Col span={16} offset={4}> 
                     <h2>Top Products</h2>
@@ -56,6 +54,5 @@ export default function Home() {
                     </Swiper>
                 </Col>
             </Row>
-        </Layout>
     )
 }

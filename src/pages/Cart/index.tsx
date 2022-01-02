@@ -3,7 +3,6 @@ import {Row, Col} from 'antd'
 import { MinusOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store';
-import Layout from '../../components/Layout'
 import './cart.css'
 import { Link } from 'react-router-dom';
 import { deleteCartItem, changeCartQuantity } from '../../store/reducers/cart'
@@ -49,7 +48,6 @@ export default function CartPage() {
     }, 0)
 
     return (
-        <Layout>
             <Row>
                 <Col span={16} offset={4} style={{display: 'flex', flexDirection: 'column'}}>
                     <div className='cart-container'>
@@ -93,6 +91,5 @@ export default function CartPage() {
                     </div>}
                 </Col>
             </Row>
-        </Layout>
     )
 }

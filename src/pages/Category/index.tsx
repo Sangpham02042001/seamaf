@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { Row, Col } from 'antd'
 import { RootState } from '../../store'
 import { getProductsByCategoryId } from '../../store/reducers/products'
-import Layout from '../../components/Layout'
 import ProductItem from '../../components/ProductItem'
 import './category.css'
 
@@ -27,7 +26,6 @@ export default function CategoryPage() {
 
 
     return (
-			<Layout>
 				<>
 					<Row className='category-header'>
 						<Col span={16} offset={4}>
@@ -63,6 +61,5 @@ export default function CategoryPage() {
 						</Col>
 					</Row>
 				</>
-			</Layout>
     )
 }

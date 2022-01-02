@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { Row, Col, Button, Collapse } from 'antd'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { RootState } from '../../store'
-import Layout from '../../components/Layout'
 import ProductItem from '../../components/ProductItem'
 import { getCategories } from '../../store/reducers/categories'
 import {getProductsByCategoryId} from '../../store/reducers/products'
@@ -109,7 +108,6 @@ export default function ProductPage() {
 	}
 
 	return (
-		<Layout>
 				<div>
 				{productReducer.product.id && <>
 					<Row className='category-header'>
@@ -197,6 +195,5 @@ export default function ProductPage() {
 					</Row>
 				</>}
 				</div>
-		</Layout>
 	)
 }
