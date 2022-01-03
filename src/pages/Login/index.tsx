@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import { useDispatch } from 'react-redux'
+import React, {useState, useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import {Row, Col, Input, message} from 'antd'
 import { MailOutlined, KeyOutlined } from '@ant-design/icons'
@@ -10,10 +10,23 @@ import { axiosInstance } from '../../utils'
 import './login.css'
 
 export default function LoginPage() {
+    const userReducer = useSelector((state: RootState) => {
+        return state.user
+    })
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const history = useHistory()
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (!userReducer.loaded) {
+            dispatch(getUserInfo())
+        } else {
+            if (userReducer.user.name) {
+                history.push('/')
+            }
+        }
+    }, [userReducer.loaded])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

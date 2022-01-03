@@ -1,0 +1,12 @@
+.not-found-page {
+    min-height: calc(100vh - 130px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.not-found-page a {
+    text-decoration: underline;
+    color: blue;
+}

@@ -1,16 +1,34 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store'
 import {Row, Col, Input, message, Modal, Button} from 'antd'
 import { Link, useHistory } from 'react-router-dom'
 import { MailOutlined, KeyOutlined, UserOutlined } from '@ant-design/icons'
 import { axiosInstance } from '../../utils'
+import { getUserInfo } from '../../store/reducers/user'
+
 
 export default function SignupPage() {
+    const userReducer = useSelector((state: RootState) => {
+        return state.user
+    })
+    const dispatch = useDispatch()
     const history = useHistory()
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
+
+    useEffect(() => {
+        if (!userReducer.loaded) {
+            dispatch(getUserInfo())
+        } else {
+            if (userReducer.user.name) {
+                history.push('/')
+            }
+        }
+    }, [userReducer.loaded])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

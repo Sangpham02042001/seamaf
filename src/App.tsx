@@ -5,11 +5,12 @@ import ProductPage from "./pages/Product";
 import CartPage from "./pages/Cart";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
-import AdminRoute from "./pages/Admin";
-import Users from "./pages/Admin/Users";
+import AdminRoute from "./pages/Admin/AdminRoute";
 import "antd/dist/antd.css";
 import "./App.css";
 import Layout from "./components/Layout";
+import NotFound from "./pages/Notfound";
+import AdminPage from "./pages/Admin";
 
 function App() {
   return (
@@ -29,12 +30,9 @@ function App() {
           <Route path="/product/:productId" component={() => <ProductPage />}>
           </Route>
           <AdminRoute path='/admin'>
-            <Switch>
-              <Route path={'/admin/users'}>
-                <Users />
-              </Route>
-            </Switch>
+            <AdminPage />
           </AdminRoute>
+          <Route path="*" component={() => <NotFound />}></Route>
         </Switch>
       </Layout>
     </BrowserRouter>

@@ -1,39 +1,53 @@
-import React, {useEffect} from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import {Route, Redirect, useHistory} from 'react-router-dom'
-import { getUserInfo } from '../../store/reducers/user'
-import { RootState } from '../../store'
+import React from 'react'
+import { Row, Col, Menu } from 'antd'
+import {
+	UserOutlined,
+  DesktopOutlined,
+  ContainerOutlined,
+  ShoppingCartOutlined,
+} from '@ant-design/icons'
+import { Switch, Route, Link } from 'react-router-dom'
+import Users from './Users'
+import Products from './Products'
+import Categories from './Categories'
+import Carts from './Carts'
+import './admin-page.css'
 
-const AdminRoute = (props: any) => {
-    const dispatch = useDispatch()
-    const history = useHistory()
-    const userReducer = useSelector((state: RootState) => {
-        return state.user
-    });
-
-    useEffect(() => {
-        if (!userReducer.loaded) {
-            dispatch(getUserInfo())
-        } else {
-            console.log('fadsfasdf')
-            if (userReducer.user.role !== 'admin') {
-                history.push('/')
-            }
-        }
-    }, [userReducer.loaded])
-
-    return (
-        <>
-            {
-            	userReducer.loaded && 
-							(userReducer.user.role === 'admin' ?
-								<Route {...props} component={props.component} render={undefined} />
-								: <Redirect to='/' />
-							)
-            }
-        </>
-    )
+export default function AdminPage() {
+	return (
+		<Row className='admin-page'>
+			<Col offset={1} span={4}>
+				<Menu defaultSelectedKeys={['1']} mode="inline">
+					<Menu.Item key="1" icon={<UserOutlined />}>
+						<Link to='/admin/users'>Users</Link>
+					</Menu.Item>
+					<Menu.Item key="2" icon={<DesktopOutlined />}>
+						<Link to='/admin/products'>Products</Link>
+					</Menu.Item>
+					<Menu.Item key="3" icon={<ContainerOutlined />}>
+						<Link to='/admin/categories'>Categories</Link>
+					</Menu.Item>
+					<Menu.Item key="4" icon={<ShoppingCartOutlined />}>
+						<Link to='/admin/carts'>Carts</Link> 
+					</Menu.Item>
+				</Menu>
+			</Col>
+			<Col offset={1} span={17}>
+				<Switch>
+					<Route path={'/admin/users'}>
+						<Users />
+					</Route>
+					<Route path={'/admin/products'}>
+						<Products />
+					</Route>
+				</Switch>
+				<Route path={'/admin/categories'}>
+					<Categories />
+				</Route>
+				<Route path={'/admin/carts'}>
+					<Carts />
+				</Route>
+			</Col>
+		</Row>
+	)
 }
-
-export default AdminRoute
-

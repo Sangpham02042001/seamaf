@@ -1,0 +1,12 @@
+.admin-page {
+    margin-top: 30px;
+}
+
+.admin-delete-btn {
+    cursor: pointer;
+    color: red;
+}
+
+.admin-edit-btn {
+    cursor: pointer;
+}
