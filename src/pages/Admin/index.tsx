@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Row, Col, Menu } from 'antd'
 import {
 	UserOutlined,
@@ -14,20 +14,21 @@ import Carts from './Carts'
 import './admin-page.css'
 
 export default function AdminPage() {
+
 	return (
 		<Row className='admin-page'>
 			<Col offset={1} span={4}>
-				<Menu defaultSelectedKeys={['1']} mode="inline">
-					<Menu.Item key="1" icon={<UserOutlined />}>
+				<Menu mode="inline">
+					<Menu.Item key={1} icon={<UserOutlined />}>
 						<Link to='/admin/users'>Users</Link>
 					</Menu.Item>
-					<Menu.Item key="2" icon={<DesktopOutlined />}>
+					<Menu.Item key={2} icon={<DesktopOutlined />}>
 						<Link to='/admin/products'>Products</Link>
 					</Menu.Item>
-					<Menu.Item key="3" icon={<ContainerOutlined />}>
+					<Menu.Item key={3} icon={<ContainerOutlined />}>
 						<Link to='/admin/categories'>Categories</Link>
 					</Menu.Item>
-					<Menu.Item key="4" icon={<ShoppingCartOutlined />}>
+					<Menu.Item key={4} icon={<ShoppingCartOutlined />}>
 						<Link to='/admin/carts'>Carts</Link> 
 					</Menu.Item>
 				</Menu>
